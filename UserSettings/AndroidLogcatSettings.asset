@@ -1,0 +1,199 @@
+{
+    "m_SelectedDeviceId": "RF8N62WZTED",
+    "m_SelectedPackage": {
+        "deviceId": "RF8N62WZTED",
+        "name": "hr.ferit.tomislavmarkovica.myracinggame",
+        "processId": 16853,
+        "exited": false
+    },
+    "m_SelectedPriority": 0,
+    "m_KnownPackagesForSerialization": [
+        {
+            "deviceId": "RF8N62WZTED",
+            "name": "com.DefaultCompany.MyRacingGame",
+            "processId": 20657,
+            "exited": true
+        },
+        {
+            "deviceId": "RF8N62WZTED",
+            "name": "com.DefaultCompany.MyRacingGame",
+            "processId": 22480,
+            "exited": true
+        },
+        {
+            "deviceId": "RF8N62WZTED",
+            "name": "com.DefaultCompany.MyRacingGame",
+            "processId": 11730,
+            "exited": true
+        },
+        {
+            "deviceId": "RF8N62WZTED",
+            "name": "com.sec.android.app.launcher",
+            "processId": 2375,
+            "exited": false
+        },
+        {
+            "deviceId": "RF8N62WZTED",
+            "name": "hr.ferit.tomislavmarkovica.myracinggame",
+            "processId": 26187,
+            "exited": true
+        },
+        {
+            "deviceId": "RF8N62WZTED",
+            "name": "hr.ferit.tomislavmarkovica.myracinggame",
+            "processId": 5622,
+            "exited": false
+        },
+        {
+            "deviceId": "RF8N62WZTED",
+            "name": "hr.ferit.tomislavmarkovica.myracinggame",
+            "processId": 6957,
+            "exited": false
+        },
+        {
+            "deviceId": "RF8N62WZTED",
+            "name": "hr.ferit.tomislavmarkovica.myracinggame",
+            "processId": 8058,
+            "exited": false
+        },
+        {
+            "deviceId": "RF8N62WZTED",
+            "name": "hr.ferit.tomislavmarkovica.myracinggame",
+            "processId": 16853,
+            "exited": false
+        },
+        {
+            "deviceId": "ad05170224e08f41ad",
+            "name": "com.DefaultCompany.MyRacingGame",
+            "processId": 25396,
+            "exited": false
+        },
+        {
+            "deviceId": "ad05170224e08f41ad",
+            "name": "com.DefaultCompany.MyRacingGame",
+            "processId": 15921,
+            "exited": false
+        },
+        {
+            "deviceId": "ad05170224e08f41ad",
+            "name": "com.DefaultCompany.MyRacingGame",
+            "processId": 18281,
+            "exited": false
+        },
+        {
+            "deviceId": "ad05170224e08f41ad",
+            "name": "com.DefaultCompany.MyRacingGame",
+            "processId": 19552,
+            "exited": false
+        },
+        {
+            "deviceId": "ad05170224e08f41ad",
+            "name": "com.DefaultCompany.MyRacingGame",
+            "processId": 21165,
+            "exited": false
+        },
+        {
+            "deviceId": "ad05170224e08f41ad",
+            "name": "com.DefaultCompany.MyRacingGame",
+            "processId": 22457,
+            "exited": false
+        },
+        {
+            "deviceId": "ad05170224e08f41ad",
+            "name": "com.DefaultCompany.MyRacingGame",
+            "processId": 23899,
+            "exited": false
+        },
+        {
+            "deviceId": "ad05170224e08f41ad",
+            "name": "com.DefaultCompany.MyRacingGame",
+            "processId": 25838,
+            "exited": false
+        },
+        {
+            "deviceId": "ad05170224e08f41ad",
+            "name": "com.DefaultCompany.MyRacingGame",
+            "processId": 27355,
+            "exited": false
+        },
+        {
+            "deviceId": "ad05170224e08f41ad",
+            "name": "com.DefaultCompany.MyRacingGame",
+            "processId": 28698,
+            "exited": false
+        },
+        {
+            "deviceId": "ad05170224e08f41ad",
+            "name": "hr.ferit.tomislavmarkovica.myracinggame",
+            "processId": 13663,
+            "exited": false
+        }
+    ],
+    "m_Tags": {
+        "m_Entries": [
+            {
+                "m_Name": "Filter by all listed tags",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "No Filter",
+                "m_Selected": true
+            },
+            {
+                "m_Name": "",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "Tag Control...",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "Unity",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "CRASH",
+                "m_Selected": false
+            }
+        ]
+    },
+    "m_MemoryViewerState": {
+        "MemoryWindowHeight": 300.0,
+        "MemoryWindowWidth": 170.0,
+        "MemoryTypeEnabled": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+        ],
+        "MemoryGroup": 2,
+        "Behavior": 0
+    },
+    "m_FilterOptions": {
+        "m_Filter": "",
+        "m_UseRegularExpressions": false,
+        "m_MatchCase": false
+    },
+    "m_SymbolPaths": [],
+    "m_CaptureVideoSettings": {
+        "TimeLimitEnabled": false,
+        "TimeLimit": 180,
+        "VideoSizeEnabled": false,
+        "VideoSizeX": 1280,
+        "VideoSizeY": 720,
+        "BitRateEnabled": false,
+        "BitRateK": 20000,
+        "DisplayIdEnabled": false,
+        "DisplayId": ""
+    }
+}
