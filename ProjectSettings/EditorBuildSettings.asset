@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Track1.unity
     guid: c850ee8c3b14cc8459e7e186857cf567
+  - enabled: 1
+    path: Assets/Scenes/CarSelectionScene.unity
+    guid: 7594d69a699ddd442b6cc803b8310eac
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 33335aab1cf44b342a68cb7f0293c8f7,
       type: 2}

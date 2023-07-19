@@ -38,22 +38,22 @@ public class RotateWheels : MonoBehaviour
 		
 		
 		
-		frontLeft.motorTorque = 0f;
+		/* frontLeft.motorTorque = 0f;
 		frontRight.motorTorque = 0f;
 		
 		SpinWheel(frontLeft, leftFrontWheel);
 		SpinWheel(frontRight, rightFrontWheel);
 		SpinWheel(rearLeft, leftRearWheel);
-		SpinWheel(rearRight, rightRearWheel);
+		SpinWheel(rearRight, rightRearWheel); */
 		
-		/* float rotationAmount = rotationSpeed * Time.deltaTime;
+		float rotationAmount = rotationSpeed * Time.deltaTime;
 
 		// Create a quaternion representing the desired rotation
 		Quaternion rotation = Quaternion.AngleAxis(rotationAmount, Vector3.right);
 
 		// Apply the rotation to the game object
 		rightFrontWheel.rotation *= rotation;
-		rightRearWheel.rotation = rotation; */
+		rightRearWheel.rotation = rotation;
 	}
 	
 	void SpinWheel(WheelCollider collider, Transform wheelTransform) 
