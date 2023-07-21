@@ -7,69 +7,76 @@ using Cinemachine;
 
 public class Timer : MonoBehaviour
 {	
+	private Stopwatch stopwatch = new Stopwatch();
 	[SerializeField] Text timerText;
-	[SerializeField] GameObject car;
+	[SerializeField] CinemachineVirtualCamera cinemachineVirtualCamera;
+	[SerializeField] List<GameObject> carPrefabs;
+	[SerializeField] GameObject player;
+	[SerializeField] GameObject oponents;
+	private GameObject playerCarInstance;
+	private int playerCarPrefabNumber;
+	
 	[SerializeField] List<GameObject> aiPlayers;
 	
-	[SerializeField] GameObject player;
-	
-	[SerializeField]
-	CinemachineVirtualCamera cinemachineVirtualCamera;
-	
-	private GameObject myCarInstance; // new
-	
-	private Stopwatch stopwatch = new Stopwatch();
+	int numberOfOponents = 1;
 	
 	void Awake() 
-	{
-		UnityEngine.Debug.Log("Awake is called!!!!!");
-		
-		int carPrefabNumber = PlayerPrefs.GetInt(PlayerPrefsKeys.SelectedCar) + 1;
+	{		
+		/* int carPrefabNumber = PlayerPrefs.GetInt(PlayerPrefsKeys.SelectedCar) + 1;
 		GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>($"Assets/Racing Cars Pack 1/Prefabs/Car{carPrefabNumber}.prefab");
-		myCarInstance = Instantiate(prefab, player.transform, false);
-		myCarInstance.transform.localPosition = new Vector3(0, 0.7684599f, 0);
+		playerCarInstance = Instantiate(prefab, player.transform, false);
+		playerCarInstance.transform.localPosition = new Vector3(0, 0.7684599f, 0);
 		
-		// new
-		/* myCarInstance.AddComponent<Rigidbody>();
-		myCarInstance.GetComponent<Rigidbody>().mass = 800;
-		myCarInstance.GetComponent<Rigidbody>().drag = 4;
-		myCarInstance.GetComponent<Rigidbody>().angularDrag = 4;
-		myCarInstance.GetComponent<Rigidbody>().useGravity = true;
-		myCarInstance.GetComponent<Rigidbody>().interpolation = RigidbodyInterpolation.Extrapolate;
-		myCarInstance.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Continuous; */
+		cinemachineVirtualCamera.Follow = playerCarInstance.transform;
+		cinemachineVirtualCamera.LookAt = playerCarInstance.transform;
 		
-		// new
-		cinemachineVirtualCamera.Follow = myCarInstance.transform;
-		cinemachineVirtualCamera.LookAt = myCarInstance.transform;
-		
+		InstantiateOponents(); */
+	}
+	
+	void InstantiateOponents() 
+	{
+		int spawnedAICarsCount = 0;
+		while (spawnedAICarsCount < numberOfOponents) 
+		{			
+			// zelim bas taj auto radi componenti
+			int randomValue = 7;
+			GameObject car = Instantiate<GameObject>(carPrefabs[randomValue], oponents.transform, false);
+			car.transform.localPosition = new Vector3(0, 0.7684599f, spawnedAICarsCount * -10);
+			aiPlayers.Add(car);	
+			spawnedAICarsCount++;				
+			car.AddComponent<AICar2>();
+		}
 	}
 	
 	void Start()
 	{		
 		TrafficLightController.OnGreenLight += StartStopwatch;
-	}	
-
-	void Update()
-	{
-		timerText.text = stopwatch.Elapsed.ToString();
 	}
 	
-	bool potroseno = false;
-	
+	void FixedUpdate() 
+	{
+		timerText.text = stopwatch.Elapsed.ToString();		
+	}
+		
 	void StartStopwatch() 
 	{
 		stopwatch.Start();		
-		StartRace_EnableScripts();
+		//StartRace_EnableScripts();
 	}
 	
 	void StartRace_EnableScripts() 
 	{
-		this.car.GetComponent<CarController>().enabled = true;
-		this.car.GetComponent<RotateWheels>().enabled = true;
+		//this.car.GetComponent<CarController>().enabled = true;
+		this.playerCarInstance.GetComponent<SpinWheels>().enabled = true;
 		
 		foreach (GameObject go in aiPlayers) 
 		{
-			go.GetComponent<AICar>().enabled = true;
+			//go.GetComponent<AICar>().enabled = true;
+			
+			/* GameObject collisionDetection = go.transform.GetChild(go.transform.childCount-1).gameObject;
+			collisionDetection.GetComponent<BoxCollider>().enabled = false;			
+			collisionDetection.GetComponent<CollisionTryout>().enabled = false; */
 		}
+		aiPlayers[0].GetComponent<AICar>().enabled = true;
 	}
 }

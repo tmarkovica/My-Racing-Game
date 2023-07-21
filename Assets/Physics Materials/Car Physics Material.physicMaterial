@@ -4,13 +4,11 @@
 PhysicMaterial:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Bouncy 1
-  dynamicFriction: 0.3
-  staticFriction: 0.3
-  bounciness: 1
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Car Physics Material
+  dynamicFriction: 0
+  staticFriction: 0
+  bounciness: 0.36
   frictionCombine: 0
   bounceCombine: 3
---- !u!1002 &13400001
-EditorExtensionImpl:
-  serializedVersion: 6

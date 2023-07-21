@@ -8,8 +8,12 @@ public class MainMenu : MonoBehaviour
 		SceneManager.LoadScene(GameScenes.CarSelection);
 	}
 	
-	public void ExitButtonClick() 
+	public void QuitButtonClick() 
 	{
-		Application.Quit();
+		#if UNITY_EDITOR
+			UnityEditor.EditorApplication.isPlaying = false;
+		#else
+				Application.Quit();
+		#endif
 	}
 }

@@ -26,8 +26,8 @@ public class CarManager : MonoBehaviour
 		carInstance = Instantiate(prefabCars[prefabIndex], this.transform, false);
 		carInstance.transform.localPosition = new Vector3(0, 2f, 0);		
 		
-		carInstance.AddComponent<Rigidbody>().mass = 800;		
-		carInstance.GetComponent<BoxCollider>().material = physicsMaterial;		
+		/* carInstance.AddComponent<Rigidbody>().mass = 800;
+		carInstance.GetComponent<BoxCollider>().material = physicsMaterial;		 */
 	}	
 	
 	public void ButtonClick_PreviousCar() 

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RotateWheels : MonoBehaviour
+public class SpinWheels : MonoBehaviour
 {
 	[SerializeField]
 	private Rigidbody carRigidBodyComponentRef;
