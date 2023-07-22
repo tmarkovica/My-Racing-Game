@@ -1,13 +1,13 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEditor;
 
 public class PlayerController : MonoBehaviour
 {
 	private Rigidbody carRigidBodyRef;
-	
 	private float speed = 0;
-	[SerializeField] float maxForwardSpeed = 700f;
-	[SerializeField] float accelerationTime = 5f; // vrijeme u sekundama potrebno za postići maksimalnu brzinu
+	[SerializeField] float maxSpeed = 700f;
+	[SerializeField] float accelerationTime = 5f;
 	private float accelerationRate;
 	
 	[SerializeField] float breakingStrength = 2.5f;
@@ -25,30 +25,28 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] float checkRadius = 2f; //, originalDrag = 9f;
 	[SerializeField] float gravityForce = -10f;
 	
+	//
+	[SerializeField] Text debug;
+	[SerializeField] int forceMode = 0;
+	
 	private Rigidbody GetRigidBodyComponentFromLastChild() 
 	{
 		return this.transform.GetChild(this.transform.childCount - 1).GetComponent<Rigidbody>();
 	}
 	
-	void Start()
+	void Awake() 
 	{
-		//carRigidBodyRef = GetRigidBodyComponentFromLastChild();
 		carRigidBodyRef = this.GetComponent<Rigidbody>();
 		
-		//originalDrag = carRigidBodyRef.drag;
-		
-		
-		accelerationRate = maxForwardSpeed / accelerationTime;
+		accelerationRate = maxSpeed / accelerationTime;
 		
 		
 		leftFrontWheel = this.transform.Find("Front_Left_Wheel");
 		rightFrontWheel = this.transform.Find("Front_Right_Wheel");
-		Debug.Log(GroundTerrainData.Instance.execute());
 		
 		terrain = GroundTerrainData.Instance.Terrain;
 		terrainTagForGround = GroundTerrainData.Instance.Tag;
 	}
-		
 	
 	void Update()
 	{	
@@ -56,10 +54,14 @@ public class PlayerController : MonoBehaviour
 		DrivingControls();		
 	}
 	
+	private const float dotProductTreshold = 0.6f;
+	private bool IsMovingForwards(float dotProduct) { return dotProduct > dotProductTreshold; }
+	private bool IsMovingBackwards(float dotProduct) { return dotProduct < -dotProductTreshold; }
+	
 	private void DrivingControls() 
 	{
-		accelerationRate = maxForwardSpeed / accelerationTime;
-		float dotProduct = Vector3.Dot(carRigidBodyRef.velocity, carRigidBodyRef.gameObject.transform.forward);
+		accelerationRate = maxSpeed / accelerationTime;
+		float dotProduct = Vector3.Dot(carRigidBodyRef.velocity, carRigidBodyRef.transform.forward);
 		
 		/* if (!isGrounded)
 		{
@@ -67,8 +69,6 @@ public class PlayerController : MonoBehaviour
 			speed = Mathf.Abs(speed) - accelerationRate * Time.deltaTime * (speed > 1 ? 1 : -1);
 			return;
 		} */
-
-		Debug.Log(speed.ToString());
 		
 		if (Input.GetAxis("Vertical") > 0) // forward input
 		{			
@@ -94,26 +94,26 @@ public class PlayerController : MonoBehaviour
 		}
 		else // no input
 		{			
-			if(dotProduct > 0.6f) // decelerating when vehicle is still moving forwards with no throttle
+			if(IsMovingForwards(dotProduct)) // decelerating when vehicle is still moving forwards with no throttle
 			{
 				speed -= accelerationRate * Time.deltaTime;
 			} 
-			else if (dotProduct < -0.6f) // decelerating when vehicle is still moving backwards with no throttle
+			else if (IsMovingBackwards(dotProduct)) // decelerating when vehicle is still moving backwards with no throttle
 			{
 				speed += accelerationRate * Time.deltaTime;
 			} 
 			else 
 			{
 				//Debug.Log("No input, no speed");
-			}	
+			}
 		}
-		//carRigidBodyRef.AddForce(carRigidBodyRef.transform.forward * speed, ForceMode.Acceleration); // selim u fixed update
-		speed = Mathf.Clamp(speed, -maxForwardSpeed, maxForwardSpeed);
+		speed = Mathf.Clamp(speed, -maxSpeed, maxSpeed);
 		
-		if (dotProduct > 0.6f || dotProduct < -0.6f)
+		//if (dotProduct > 0.6f || dotProduct < -0.6f)
+		if (IsMovingForwards(dotProduct) || IsMovingBackwards(dotProduct))
 		{ 
 
-			float speedAsPercentageOfMaxSpeed = speed / maxForwardSpeed;
+			float speedAsPercentageOfMaxSpeed = speed / maxSpeed;
 			
 			turnInput = Input.GetAxis("Horizontal") * turnStrength * speedAsPercentageOfMaxSpeed *
 			(speedAsPercentageOfMaxSpeed >= (1 - minimalBreakingStrengthPercentage) ? minimalBreakingStrengthPercentage : 1 - speedAsPercentageOfMaxSpeed);
@@ -131,7 +131,7 @@ public class PlayerController : MonoBehaviour
 		
 		/* rigidBodyComponentRef.gameObject.transform.rotation =
 		Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, turnInput, 0f)); */
-		carRigidBodyRef.gameObject.transform.Rotate(new Vector3(0f, turnInput, 0f)); // ovo valja
+		carRigidBodyRef.transform.Rotate(new Vector3(0f, turnInput, 0f)); // ovo valja
 		//turnInput = Mathf.Clamp(turnInput, -turnStrength, turnStrength);
 		
  		// NOVI NAČIN ROTACIJE
@@ -150,8 +150,8 @@ public class PlayerController : MonoBehaviour
 	{
 		if (Input.GetKeyDown(KeyCode.R))
 		{
-			carRigidBodyRef.gameObject.transform.localPosition = Vector3.zero;
-			carRigidBodyRef.gameObject.transform.localRotation = Quaternion.identity;
+			carRigidBodyRef.transform.localPosition = Vector3.zero;
+			carRigidBodyRef.transform.localRotation = Quaternion.identity;
 			speed = 0;
 		}
 		
@@ -162,7 +162,7 @@ public class PlayerController : MonoBehaviour
 		
 		if (Input.GetKeyDown(KeyCode.LeftAlt)) 
 		{
-			speed = maxForwardSpeed;
+			speed = maxSpeed;
 		}
 	}
 	
@@ -183,9 +183,11 @@ public class PlayerController : MonoBehaviour
 		TurningWheels();
 		
 		// ovo za grounded detection mozda i izbaciti
-		RaycastHit hit;		
-		isGrounded = Physics.Raycast(carRigidBodyRef.transform.position, Vector3.down, out hit, checkRadius, terrainTagForGround);	
-		/* 	
+		//RaycastHit hit;		
+		//isGrounded = Physics.Raycast(carRigidBodyRef.transform.position, Vector3.down, out hit, checkRadius, terrainTagForGround);
+		// Preseljeno u GroundTerrainData
+		isGrounded = GroundTerrainData.Instance.IsGrounded(carRigidBodyRef.transform.position);		
+			
 		if (isGrounded )	
 		{
 			debug.text = "grounded";
@@ -198,19 +200,23 @@ public class PlayerController : MonoBehaviour
 		{
 			debug.text = "not grounded";
 			//carRigidBodyRef.drag = 0.1f;
-			carRigidBodyRef.AddForce(Vector3.up * gravityForce * 10000f, ForceMode.Acceleration);
+			/* forceMode = (int)ForceMode.Acceleration; 5
+			forceMode = (int)ForceMode.Force; 0
+			forceMode = (int)ForceMode.Impulse; 1
+			forceMode = (int)ForceMode.VelocityChange;2 */
+			
+			carRigidBodyRef.AddForce(Vector3.up * gravityForce * 10000f, (ForceMode)forceMode);
 			//speed = Mathf.Abs(speed) - accelerationRate * Time.deltaTime * (speed > 1 ? 1 : -1);
-		} */
+		}
 		
 		
-		carRigidBodyRef.AddForce(carRigidBodyRef.transform.forward * speed, ForceMode.Acceleration);
-		
+		carRigidBodyRef.AddForce(carRigidBodyRef.transform.forward * speed, ForceMode.Acceleration);		
 		AdjustSpeedForTerrain();
 	}
 	
 	private void AdjustSpeedForTerrain() 
 	{
-		maxForwardSpeed = GroundTerrainData.Instance.GetMaxSpeedForTerrainAtPlayersPosition(carRigidBodyRef.transform.position);	
+		maxSpeed = GroundTerrainData.Instance.GetMaxSpeedForTerrainAtPlayersPosition(carRigidBodyRef.transform.position);	
 	}
 }
 

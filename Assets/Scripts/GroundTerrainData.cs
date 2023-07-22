@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class GroundTerrainData : MonoBehaviour
 {
@@ -9,16 +8,11 @@ public class GroundTerrainData : MonoBehaviour
 	public LayerMask Tag { get { return _tag; } set {} }
 	[SerializeField] private Terrain _terrain;
 	public Terrain Terrain { get { return _terrain; } set {} }
+	private float checkRadius = 2f;
 	
 	void Awake() 
 	{
 		Instance = this;
-	}
-	
-	public string execute() 
-	{
-		return this.Tag.ToString();
-		
 	}
 	
 	public float GetMaxSpeedForTerrainAtPlayersPosition(Vector3 playerPosition) 
@@ -38,8 +32,6 @@ public class GroundTerrainData : MonoBehaviour
 	private int DetectTexture(Vector3 playerPosition) 
 	{
 		// Get the player's position in world space.
-		//Vector3 playerPosition = carRigidBodyRef.transform.position;
-
 		// Ensure the player's position is within the bounds of the terrain.
 		if (Terrain.terrainData.bounds.Contains(playerPosition))
 		{
@@ -86,5 +78,11 @@ public class GroundTerrainData : MonoBehaviour
 		}
 
 		return dominantIndex;
+	}
+	
+	public bool IsGrounded(Vector3 vehiclePosition) 
+	{
+		RaycastHit hit;
+		return Physics.Raycast(vehiclePosition, Vector3.down, out hit, checkRadius, _tag);
 	}
 }

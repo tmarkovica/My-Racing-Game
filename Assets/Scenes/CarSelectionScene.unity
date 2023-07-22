@@ -716,7 +716,7 @@ GameObject:
   - component: {fileID: 403854036}
   - component: {fileID: 403854035}
   m_Layer: 5
-  m_Name: Dropdown
+  m_Name: Dropdown Track Selector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1114,7 +1114,7 @@ GameObject:
   - component: {fileID: 680774488}
   - component: {fileID: 680774487}
   m_Layer: 5
-  m_Name: Button (2)
+  m_Name: Button Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1248,7 +1248,7 @@ GameObject:
   - component: {fileID: 756325076}
   - component: {fileID: 756325075}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Button Next Car
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2524,7 +2524,7 @@ GameObject:
   - component: {fileID: 1944584255}
   - component: {fileID: 1944584254}
   m_Layer: 5
-  m_Name: Button (1)
+  m_Name: Button Previous Car
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2658,7 +2658,7 @@ GameObject:
   - component: {fileID: 2003976512}
   - component: {fileID: 2003976511}
   m_Layer: 5
-  m_Name: Button (3)
+  m_Name: Button Start Race
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

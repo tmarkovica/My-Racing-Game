@@ -4,17 +4,14 @@ using UnityEngine.SceneManagement;
 
 public class CarManager : MonoBehaviour
 {
-	[SerializeField]
-	List<GameObject> prefabCars;
-	
-	[SerializeField] 
-	PhysicMaterial physicsMaterial;
+	[SerializeField] List<GameObject> prefabCars;
+	[SerializeField] PhysicMaterial physicsMaterial;
 	
 	private GameObject carInstance;	
 	private int prefabIndex = 0;	
-	private int selectedTrackIndex = 0;	
+	private int selectedTrackIndex = 0;
 	
-	void Start()
+	void Awake() 
 	{
 		InstantiateCar();
 	}
@@ -24,10 +21,9 @@ public class CarManager : MonoBehaviour
 		Destroy(carInstance);
 		
 		carInstance = Instantiate(prefabCars[prefabIndex], this.transform, false);
-		carInstance.transform.localPosition = new Vector3(0, 2f, 0);		
-		
-		/* carInstance.AddComponent<Rigidbody>().mass = 800;
-		carInstance.GetComponent<BoxCollider>().material = physicsMaterial;		 */
+		carInstance.transform.localPosition = new Vector3(0, 1.5f, 0);
+		carInstance.GetComponent<Rigidbody>().drag = 0;
+		carInstance.GetComponent<BoxCollider>().material = physicsMaterial;
 	}	
 	
 	public void ButtonClick_PreviousCar() 
