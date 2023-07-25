@@ -24,6 +24,7 @@ public class CarManager : MonoBehaviour
 		carInstance.transform.localPosition = new Vector3(0, 1.5f, 0);
 		carInstance.GetComponent<Rigidbody>().drag = 0;
 		carInstance.GetComponent<BoxCollider>().material = physicsMaterial;
+		carInstance.GetComponent<KeepVehicleGrounded>().enabled = false;
 	}	
 	
 	public void ButtonClick_PreviousCar() 

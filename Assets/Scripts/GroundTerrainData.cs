@@ -8,7 +8,6 @@ public class GroundTerrainData : MonoBehaviour
 	public LayerMask Tag { get { return _tag; } set {} }
 	[SerializeField] private Terrain _terrain;
 	public Terrain Terrain { get { return _terrain; } set {} }
-	private float checkRadius = 2f;
 	
 	void Awake() 
 	{
@@ -80,9 +79,9 @@ public class GroundTerrainData : MonoBehaviour
 		return dominantIndex;
 	}
 	
-	public bool IsGrounded(Vector3 vehiclePosition) 
+	public bool IsGrounded(Vector3 vehiclePosition, float checkRadius) 
 	{
 		RaycastHit hit;
-		return Physics.Raycast(vehiclePosition, Vector3.down, out hit, checkRadius, _tag);
+		return Physics.Raycast(vehiclePosition, Vector3.down, out hit, checkRadius +  0.1f, _tag);
 	}
 }

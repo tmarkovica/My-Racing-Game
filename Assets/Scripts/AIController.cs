@@ -11,6 +11,7 @@ public class AIController : MonoBehaviour
 	}
 
 	private Rigidbody carRigidBody = null;
+	private BoxCollider boxCollider;
 	private structAI ai;	
 	
 	private float speed = 0;
@@ -20,10 +21,10 @@ public class AIController : MonoBehaviour
 	
 	[SerializeField] float turnStrength = 0.08f;
 	
-	void Awake()
+	void Start()
 	{
-		Debug.Log("AIController awake.");
 		carRigidBody = this.GetComponent<Rigidbody>();
+		boxCollider = this.GetComponent<BoxCollider>();
 
 		ai.checkpoints = GameObject.FindWithTag("Checkpoints").transform;
 		ai.checkpointWallIndex = 0;		
@@ -41,10 +42,11 @@ public class AIController : MonoBehaviour
 	{
 		// turn
 		ai.directionSteer = ai.checkpoints.GetChild(ai.checkpointWallIndex).position - this.transform.position;
+		
 		ai.rotationSteer = Quaternion.LookRotation(ai.directionSteer);
 		this.transform.rotation = Quaternion.Lerp(this.transform.rotation, ai.rotationSteer, turnStrength);
 		
-		float angle = Vector3.Angle(carRigidBody.transform.forward, ai.checkpoints.GetChild(ai.checkpointWallIndex).position); // ne koristi se		
+		float angle = Vector3.Angle(carRigidBody.transform.forward, ai.checkpoints.GetChild(ai.checkpointWallIndex).position); // ne koristi se
 		
 		carRigidBody.AddForce(carRigidBody.transform.forward * speed, ForceMode.Acceleration);
 		
@@ -67,7 +69,7 @@ public class AIController : MonoBehaviour
 	}
 	
 	private void OnTriggerEnter(Collider collider)
-	{
+	{		
 		if (collider.CompareTag("Wall") == true)
 		{
 			if (CheckpointsColoring.Instance == null)			

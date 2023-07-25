@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Checkpoints
   - Wall
+  - LogMessage
   layers:
   - Default
   - TransparentFX

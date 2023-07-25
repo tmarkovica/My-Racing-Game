@@ -1,10 +1,8 @@
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEditor;
 
 public class PlayerController : MonoBehaviour
 {
-	private Rigidbody carRigidBodyRef;
+	private Rigidbody carRigidBody;
 	private float speed = 0;
 	[SerializeField] float maxSpeed = 700f;
 	[SerializeField] float accelerationTime = 5f;
@@ -15,28 +13,20 @@ public class PlayerController : MonoBehaviour
 	
 	[SerializeField] Transform leftFrontWheel, rightFrontWheel;
 	[SerializeField] float turnStrength = 4f;
-	private float maxWheelTurn = 50;
+	private const float maxWheelTurn = 50;
 	private float turnInput = 0;
 	
 	[SerializeField] LayerMask terrainTagForGround;
 	public Terrain terrain;
-	private bool isGrounded;
-	
-	[SerializeField] float checkRadius = 2f; //, originalDrag = 9f;
-	[SerializeField] float gravityForce = -10f;
-	
-	//
-	[SerializeField] Text debug;
-	[SerializeField] int forceMode = 0;
 	
 	private Rigidbody GetRigidBodyComponentFromLastChild() 
 	{
 		return this.transform.GetChild(this.transform.childCount - 1).GetComponent<Rigidbody>();
 	}
 	
-	void Awake() 
+	void Start() 
 	{
-		carRigidBodyRef = this.GetComponent<Rigidbody>();
+		carRigidBody = this.GetComponent<Rigidbody>();
 		
 		accelerationRate = maxSpeed / accelerationTime;
 		
@@ -53,7 +43,7 @@ public class PlayerController : MonoBehaviour
 		OtherControls();
 		DrivingControls();		
 	}
-	
+
 	private const float dotProductTreshold = 0.6f;
 	private bool IsMovingForwards(float dotProduct) { return dotProduct > dotProductTreshold; }
 	private bool IsMovingBackwards(float dotProduct) { return dotProduct < -dotProductTreshold; }
@@ -61,77 +51,32 @@ public class PlayerController : MonoBehaviour
 	private void DrivingControls() 
 	{
 		accelerationRate = maxSpeed / accelerationTime;
-		float dotProduct = Vector3.Dot(carRigidBodyRef.velocity, carRigidBodyRef.transform.forward);
+		float dotProduct = Vector3.Dot(carRigidBody.velocity, carRigidBody.transform.forward);
 		
-		/* if (!isGrounded)
-		{
-			//carRigidBodyRef.drag = 0.3f;
-			speed = Mathf.Abs(speed) - accelerationRate * Time.deltaTime * (speed > 1 ? 1 : -1);
-			return;
-		} */
-		
-		if (Input.GetAxis("Vertical") > 0) // forward input
+		if (Input.GetAxis("Vertical") > 0)
 		{			
-			if (speed < 0) // breaking
-			{
-				speed += accelerationRate * Time.deltaTime * breakingStrength;
-			}
-			else // moving forward, full throttle
-			{
-				speed += accelerationRate * Time.deltaTime;
-			}
+			HandlePositiveVerticalInput();
 		}
-		else if (Input.GetAxis("Vertical") < 0) // backward input
+		else if (Input.GetAxis("Vertical") < 0)
 		{			
-			if (speed > 0) // breaking
-			{
-				speed -= accelerationRate * Time.deltaTime * breakingStrength;	
-			}
-			else // going reverse, full throttle
-			{
-				speed -= accelerationRate * Time.deltaTime;
-			}
+			HandleNegativeVerticalInput();
 		}
-		else // no input
+		else
 		{			
-			if(IsMovingForwards(dotProduct)) // decelerating when vehicle is still moving forwards with no throttle
-			{
-				speed -= accelerationRate * Time.deltaTime;
-			} 
-			else if (IsMovingBackwards(dotProduct)) // decelerating when vehicle is still moving backwards with no throttle
-			{
-				speed += accelerationRate * Time.deltaTime;
-			} 
-			else 
-			{
-				//Debug.Log("No input, no speed");
-			}
+			HandleNoVerticalInput(dotProduct);
 		}
 		speed = Mathf.Clamp(speed, -maxSpeed, maxSpeed);
 		
-		//if (dotProduct > 0.6f || dotProduct < -0.6f)
 		if (IsMovingForwards(dotProduct) || IsMovingBackwards(dotProduct))
 		{ 
-
-			float speedAsPercentageOfMaxSpeed = speed / maxSpeed;
-			
-			turnInput = Input.GetAxis("Horizontal") * turnStrength * speedAsPercentageOfMaxSpeed *
-			(speedAsPercentageOfMaxSpeed >= (1 - minimalBreakingStrengthPercentage) ? minimalBreakingStrengthPercentage : 1 - speedAsPercentageOfMaxSpeed);
-			// ako idem 90% ili više posto maksimalne brzine auta, tada mi ostane samo 10% snage skretanja vozila
-			// za, od 0% - 90% maksimalne brzine vozila, odgovara samo komplement postotka za snagu skretanja vozila
-			// za ovih 90 - 100 % se ne može iskoristiti komplement jer bi onda totalno oduzeli mogućnost skretanja vozilu
-			// možda bolje ovak napisati.. pa onda i teksta prema tomu okrenuti
-			//turnInput = Input.GetAxis("Horizontal") * turnStrength *  (speedAsPercentageOfMaxSpeed <= 0.9 ? 1 - speedAsPercentageOfMaxSpeed : 0.1f);
-			
+			AllowSteering();			
 		}
 		else 
 		{
 			turnInput = 0;
 		}		
+		carRigidBody.transform.Rotate(new Vector3(0f, turnInput, 0f));
 		
-		/* rigidBodyComponentRef.gameObject.transform.rotation =
-		Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, turnInput, 0f)); */
-		carRigidBodyRef.transform.Rotate(new Vector3(0f, turnInput, 0f)); // ovo valja
 		//turnInput = Mathf.Clamp(turnInput, -turnStrength, turnStrength);
 		
  		// NOVI NAČIN ROTACIJE
@@ -143,15 +88,70 @@ public class PlayerController : MonoBehaviour
 			carRigidBodyRef.MoveRotation(carRigidBodyRef.rotation * deltaRotation);			
 		} */
 		
+		//Debug.Log(dotProduct.ToString());
 		//Debug.Log(speed.ToString());
+		//Debug.Log(Input.GetAxis("Vertical").ToString());
+	}
+	
+	private void AllowSteering()
+	{
+		float speedAsPercentageOfMaxSpeed = speed / maxSpeed;
+			
+		turnInput = Input.GetAxis("Horizontal") * turnStrength * speedAsPercentageOfMaxSpeed *
+		(speedAsPercentageOfMaxSpeed >= (1 - minimalBreakingStrengthPercentage) ? minimalBreakingStrengthPercentage : 1 - speedAsPercentageOfMaxSpeed);
+		// ako idem 90% ili više posto maksimalne brzine auta, tada mi ostane samo 10% snage skretanja vozila
+		// za, od 0% - 90% maksimalne brzine vozila, odgovara samo komplement postotka za snagu skretanja vozila
+		// za ovih 90 - 100 % se ne može iskoristiti komplement jer bi onda totalno oduzeli mogućnost skretanja vozilu
+		// možda bolje ovak napisati.. pa onda i teksta prema tomu okrenuti
+		//turnInput = Input.GetAxis("Horizontal") * turnStrength *  (speedAsPercentageOfMaxSpeed <= 0.9 ? 1 - speedAsPercentageOfMaxSpeed : 0.1f);
+	}
+	
+	private void HandlePositiveVerticalInput()
+	{
+		if (speed < 0) // breaking
+		{
+			speed += accelerationRate * Time.deltaTime * breakingStrength;
+		}
+		else // moving forward, full throttle
+		{
+			speed += accelerationRate * Time.deltaTime;
+		}
+	}
+	
+	private void HandleNegativeVerticalInput()
+	{
+		if (speed > 0) // breaking
+		{
+			speed -= accelerationRate * Time.deltaTime * breakingStrength;
+		}
+		else // going reverse, full throttle
+		{
+			speed -= accelerationRate * Time.deltaTime;
+		}
+	}
+	
+	private void HandleNoVerticalInput(float dotProduct)
+	{
+		if(IsMovingForwards(dotProduct)) // decelerating when vehicle is still moving forwards with no throttle
+		{
+			speed -= accelerationRate * Time.deltaTime;
+		} 
+		else if (IsMovingBackwards(dotProduct)) // decelerating when vehicle is still moving backwards with no throttle
+		{
+			speed += accelerationRate * Time.deltaTime;
+		} 
+		else 
+		{
+			speed = 0;
+		}
 	}
 	
 	private void OtherControls() 
 	{
 		if (Input.GetKeyDown(KeyCode.R))
 		{
-			carRigidBodyRef.transform.localPosition = Vector3.zero;
-			carRigidBodyRef.transform.localRotation = Quaternion.identity;
+			carRigidBody.transform.localPosition = Vector3.zero;
+			carRigidBody.transform.localRotation = Quaternion.identity;
 			speed = 0;
 		}
 		
@@ -174,49 +174,17 @@ public class PlayerController : MonoBehaviour
 		Quaternion.Euler(rightFrontWheel.localRotation.eulerAngles.x, Input.GetAxis("Horizontal") * maxWheelTurn, rightFrontWheel.localRotation.eulerAngles.z);
 	}
 	
-	Vector3 oldPosition;
-	
-	
-	
 	void FixedUpdate() 
 	{
 		TurningWheels();
 		
-		// ovo za grounded detection mozda i izbaciti
-		//RaycastHit hit;		
-		//isGrounded = Physics.Raycast(carRigidBodyRef.transform.position, Vector3.down, out hit, checkRadius, terrainTagForGround);
-		// Preseljeno u GroundTerrainData
-		isGrounded = GroundTerrainData.Instance.IsGrounded(carRigidBodyRef.transform.position);		
-			
-		if (isGrounded )	
-		{
-			debug.text = "grounded";
-			//carRigidBodyRef.drag = originalDrag;
-			
-			//if (Mathf.Abs(speed) > 0)			
-				//carRigidBodyRef.AddForce(carRigidBodyRef.transform.forward * speed, ForceMode.Acceleration);
-		}
-		else 
-		{
-			debug.text = "not grounded";
-			//carRigidBodyRef.drag = 0.1f;
-			/* forceMode = (int)ForceMode.Acceleration; 5
-			forceMode = (int)ForceMode.Force; 0
-			forceMode = (int)ForceMode.Impulse; 1
-			forceMode = (int)ForceMode.VelocityChange;2 */
-			
-			carRigidBodyRef.AddForce(Vector3.up * gravityForce * 10000f, (ForceMode)forceMode);
-			//speed = Mathf.Abs(speed) - accelerationRate * Time.deltaTime * (speed > 1 ? 1 : -1);
-		}
-		
-		
-		carRigidBodyRef.AddForce(carRigidBodyRef.transform.forward * speed, ForceMode.Acceleration);		
+		carRigidBody.AddForce(carRigidBody.transform.forward * speed, ForceMode.Acceleration);		
 		AdjustSpeedForTerrain();
 	}
 	
 	private void AdjustSpeedForTerrain() 
 	{
-		maxSpeed = GroundTerrainData.Instance.GetMaxSpeedForTerrainAtPlayersPosition(carRigidBodyRef.transform.position);	
+		maxSpeed = GroundTerrainData.Instance.GetMaxSpeedForTerrainAtPlayersPosition(carRigidBody.transform.position);	
 	}
 }
 

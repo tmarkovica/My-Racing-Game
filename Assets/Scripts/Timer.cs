@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Diagnostics;
-using System.Collections.Generic;
 
 public class Timer : MonoBehaviour
 {	
@@ -10,8 +9,6 @@ public class Timer : MonoBehaviour
 	[SerializeField] Transform player;
 	[SerializeField] Transform oponents;
 	private int playerCarPrefabNumber;
-	
-	[SerializeField] List<Transform> aiPlayers;
 	
 	int numberOfOponents = 1;
 	

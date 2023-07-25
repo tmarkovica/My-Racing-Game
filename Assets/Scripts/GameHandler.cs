@@ -6,13 +6,19 @@ public class GameHandler : MonoBehaviour
 {
 	[SerializeField] CinemachineVirtualCamera cinemachineVirtualCamera;
 	[SerializeField] List<GameObject> carPrefabs;	
-	private int playerCarPrefabNumber;
+	private int playerCarPrefabNumber = 7;
 	[SerializeField] Transform player;
 	[SerializeField] Transform oponents;	
 	private GameObject playerCarInstance;
 	private List<GameObject> aiCarInstances = new List<GameObject>();
 	
-	void Awake()
+	/* void Awake()
+	{
+		InstantiatePlayerVehicle();
+		InstantiateOponentVehicles(1);
+	} */
+	
+	void Start() 
 	{
 		InstantiatePlayerVehicle();
 		InstantiateOponentVehicles(1);
@@ -45,7 +51,7 @@ public class GameHandler : MonoBehaviour
 		
 		while (spawnedAICarsCount < numberOfOponents) 
 		{
-			int randomValue = Random.Range(0, 8);
+			int randomValue = Random.Range(0, 8);	
 			if (randomValue != playerCarPrefabNumber)			
 			{
 				GameObject car = Instantiate<GameObject>(carPrefabs[randomValue], oponents.transform, false);
@@ -54,7 +60,7 @@ public class GameHandler : MonoBehaviour
 				spawnedAICarsCount++;				
 				car.AddComponent<AIController>().enabled = false;
 				//SetCinemachineCameraToFollow(car.transform);
-			}	
+			}
 		}
 	}
 }
