@@ -13,6 +13,7 @@ public class CarManager : MonoBehaviour
 	
 	void Awake() 
 	{
+		Time.timeScale = 1;
 		InstantiateCar();
 	}
 	

@@ -13,18 +13,29 @@ public class Timer : MonoBehaviour
 	int numberOfOponents = 1;
 	
 	void Start()
-	{		
-		TrafficLightController.OnGreenLight += StartStopwatch;
+	{
+		UnityEngine.Debug.Log("Timer started!, ref: " + player);
+		Time.timeScale = 1;
 	}
 	
 	void FixedUpdate() 
 	{
 		timerText.text = stopwatch.Elapsed.ToString();		
 	}
+	
+	private void OnEnable()
+    {
+        TrafficLightController.OnGreenLight += StartStopwatch;
+    }
+
+    private void OnDisable()
+    {
+        TrafficLightController.OnGreenLight -= StartStopwatch;
+    }
 		
 	void StartStopwatch() 
 	{
-		stopwatch.Start();		
+		stopwatch.Start();	
 		StartRace_EnableScripts();
 	}
 	

@@ -16,7 +16,7 @@ public class GroundTerrainData : MonoBehaviour
 	
 	public float GetMaxSpeedForTerrainAtPlayersPosition(Vector3 playerPosition) 
 	{
-		int textureIndex = DetectTexture(playerPosition);
+		int textureIndex = GetDominantTextureIndex(playerPosition);
 
 		if (textureIndex == 0) // grass
 		{
@@ -28,23 +28,36 @@ public class GroundTerrainData : MonoBehaviour
 		}	
 	}
 	
-	private int DetectTexture(Vector3 playerPosition) 
+	private int GetDominantTextureIndex(Vector3 playerPosition) 
 	{
 		// Get the player's position in world space.
-		// Ensure the player's position is within the bounds of the terrain.
-		if (Terrain.terrainData.bounds.Contains(playerPosition))
+		// Ensure the player's position is within the bounds of the terrain. 
+		if (_terrain.terrainData.bounds.Contains(playerPosition))
 		{
 			// Get the normalized position of the player within the terrain.
 			Vector3 normalizedPosition = GetNormalizedTerrainPosition(playerPosition);
 
 			// Get the alphamap data at the player's position.
-			float[,,] alphamapData = Terrain.terrainData.GetAlphamaps(
-				(int)(normalizedPosition.x * Terrain.terrainData.alphamapWidth),
-				(int)(normalizedPosition.z * Terrain.terrainData.alphamapHeight),
+			float[,,] alphamapData = _terrain.terrainData.GetAlphamaps(
+				(int)(normalizedPosition.x * _terrain.terrainData.alphamapWidth),
+				(int)(normalizedPosition.z * _terrain.terrainData.alphamapHeight),
 				1, 1
 			);
 			
-			return GetDominantTextureIndex(alphamapData);
+			// Find the index of the highest value in the alphamap data.
+			int dominantIndex = 0;
+			float maxAlpha = 0f;
+
+			for (int i = 0; i < alphamapData.GetLength(2); i++)
+			{
+				if (alphamapData[0, 0, i] > maxAlpha)
+				{
+					maxAlpha = alphamapData[0, 0, i];
+					dominantIndex = i;
+				}
+			}
+			
+			return dominantIndex;
 		}
 		return -1;
 	}
@@ -53,15 +66,15 @@ public class GroundTerrainData : MonoBehaviour
 	{
 		// Convert world position to normalized position within the terrain.
 		Vector3 normalizedPosition = new Vector3(
-			(position.x - Terrain.terrainData.bounds.min.x) / Terrain.terrainData.size.x,
+			(position.x - _terrain.terrainData.bounds.min.x) / _terrain.terrainData.size.x,
 			0,
-			(position.z - Terrain.terrainData.bounds.min.z) / Terrain.terrainData.size.z
+			(position.z - _terrain.terrainData.bounds.min.z) / _terrain.terrainData.size.z
 		);
 
 		return normalizedPosition;
 	}
 
-	private int GetDominantTextureIndex(float[,,] alphamapData)
+	/* private int GetDominantTextureIndex(float[,,] alphamapData)
 	{
 		// Find the index of the highest value in the alphamap data.
 		int dominantIndex = 0;
@@ -75,9 +88,9 @@ public class GroundTerrainData : MonoBehaviour
 				dominantIndex = i;
 			}
 		}
-
+		
 		return dominantIndex;
-	}
+	} */
 	
 	public bool IsGrounded(Vector3 vehiclePosition, float checkRadius) 
 	{

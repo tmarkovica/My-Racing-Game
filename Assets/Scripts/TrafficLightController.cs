@@ -12,6 +12,7 @@ public class TrafficLightController : MonoBehaviour
 	
 	void Start()
 	{
+		Debug.Log("TrafficLightController started");
 		audioSrc = this.GetComponent<AudioSource>();
 		
 		red.enabled = true;		

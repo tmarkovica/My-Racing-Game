@@ -9,10 +9,10 @@ public class PlayerController : MonoBehaviour
 	private float accelerationRate;
 	
 	[SerializeField] float breakingStrength = 2.5f;
-	[SerializeField] [Range(0, 1)] float minimalBreakingStrengthPercentage = 0.2f;
+	[SerializeField] [Range(0, 1)] float minimalSteeringStrengthPercentage = 0.2f;
 	
 	[SerializeField] Transform leftFrontWheel, rightFrontWheel;
-	[SerializeField] float turnStrength = 4f;
+	[SerializeField] float turnStrength = 6.5f;
 	private const float maxWheelTurn = 50;
 	private float turnInput = 0;
 	
@@ -36,6 +36,10 @@ public class PlayerController : MonoBehaviour
 		
 		terrain = GroundTerrainData.Instance.Terrain;
 		terrainTagForGround = GroundTerrainData.Instance.Tag;
+		
+		#if UNITY_ANDROID || UNITY_WEBGL
+			Input.gyro.enabled = true;
+		#endif
 	}
 	
 	void Update()
@@ -75,7 +79,7 @@ public class PlayerController : MonoBehaviour
 		{
 			turnInput = 0;
 		}		
-		carRigidBody.transform.Rotate(new Vector3(0f, turnInput, 0f));
+		//carRigidBody.transform.Rotate(new Vector3(0f, turnInput, 0f));
 		
 		//turnInput = Mathf.Clamp(turnInput, -turnStrength, turnStrength);
 		
@@ -96,14 +100,16 @@ public class PlayerController : MonoBehaviour
 	private void AllowSteering()
 	{
 		float speedAsPercentageOfMaxSpeed = speed / maxSpeed;
-			
-		turnInput = Input.GetAxis("Horizontal") * turnStrength * speedAsPercentageOfMaxSpeed *
-		(speedAsPercentageOfMaxSpeed >= (1 - minimalBreakingStrengthPercentage) ? minimalBreakingStrengthPercentage : 1 - speedAsPercentageOfMaxSpeed);
-		// ako idem 90% ili više posto maksimalne brzine auta, tada mi ostane samo 10% snage skretanja vozila
-		// za, od 0% - 90% maksimalne brzine vozila, odgovara samo komplement postotka za snagu skretanja vozila
-		// za ovih 90 - 100 % se ne može iskoristiti komplement jer bi onda totalno oduzeli mogućnost skretanja vozilu
-		// možda bolje ovak napisati.. pa onda i teksta prema tomu okrenuti
-		//turnInput = Input.GetAxis("Horizontal") * turnStrength *  (speedAsPercentageOfMaxSpeed <= 0.9 ? 1 - speedAsPercentageOfMaxSpeed : 0.1f);
+		
+		
+		#if UNITY_ANDROID || UNITY_WEBGL
+			float horizontalInput = Input.gyro.rotationRateUnbiased.x;
+		#else 
+			float horizontalInput = Input.GetAxis("Horizontal");
+		#endif
+		
+		turnInput = horizontalInput * turnStrength * speedAsPercentageOfMaxSpeed *
+		(speedAsPercentageOfMaxSpeed >= (1 - minimalSteeringStrengthPercentage) ? minimalSteeringStrengthPercentage : 1 - speedAsPercentageOfMaxSpeed);
 	}
 	
 	private void HandlePositiveVerticalInput()
@@ -177,8 +183,9 @@ public class PlayerController : MonoBehaviour
 	void FixedUpdate() 
 	{
 		TurningWheels();
+		carRigidBody.transform.Rotate(new Vector3(0f, turnInput, 0f));
 		
-		carRigidBody.AddForce(carRigidBody.transform.forward * speed, ForceMode.Acceleration);		
+		carRigidBody.AddForce(carRigidBody.transform.forward * speed, ForceMode.Acceleration);
 		AdjustSpeedForTerrain();
 	}
 	

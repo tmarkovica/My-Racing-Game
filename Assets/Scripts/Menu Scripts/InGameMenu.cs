@@ -14,11 +14,11 @@ public class InGameMenu : MonoBehaviour
 	{
 		if (Input.GetKeyDown(KeyCode.Escape)) 
 		{
-			toggleGamePause();
+			ToggleGamePause();
 		}
 	}
 	
-	private void toggleGamePause() 
+	private void ToggleGamePause() 
 	{
 		bool paused = (Time.timeScale != 0);
 		Time.timeScale = paused == true ? 0 : 1;
@@ -28,12 +28,12 @@ public class InGameMenu : MonoBehaviour
 	
 	public void RestartGame() 
 	{
-		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
 	}
 	
 	public void CarSelection()
 	{
-		SceneManager.LoadScene(GameScenes.CarSelection);
+		SceneManager.LoadScene(GameScenes.CarSelection, LoadSceneMode.Single);
 	}
 	
 	public void QuitGame() 
@@ -41,7 +41,7 @@ public class InGameMenu : MonoBehaviour
 		#if UNITY_EDITOR
 			UnityEditor.EditorApplication.isPlaying = false;
 		#else
-				Application.Quit();
+			Application.Quit();
 		#endif
 	}
 }
