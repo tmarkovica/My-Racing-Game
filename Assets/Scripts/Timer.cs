@@ -14,7 +14,6 @@ public class Timer : MonoBehaviour
 	
 	void Start()
 	{
-		UnityEngine.Debug.Log("Timer started!, ref: " + player);
 		Time.timeScale = 1;
 	}
 	

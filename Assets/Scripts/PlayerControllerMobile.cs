@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerControllerMobile : MonoBehaviour
 {
 	private Rigidbody carRigidBody;
 	public CarSpecifications specs;
@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
 	
 	[SerializeField] LayerMask terrainTagForGround;
 	public Terrain terrain;
+	
+	private bool mobile = false;
 	
 	private Rigidbody GetRigidBodyComponentFromLastChild() 
 	{
@@ -33,6 +35,15 @@ public class PlayerController : MonoBehaviour
 		
 		maxSpeed = specs.maxSpeed;
 		accelerationRate = maxSpeed / specs.accelerationTime;
+		
+		
+		
+		#if UNITY_ANDROID || UNITY_WEBGL
+			Input.gyro.enabled = true;
+		#endif
+		
+		if (Application.platform == RuntimePlatform.Android)
+			mobile = true;
 	}
 	
 	void Update()
@@ -63,6 +74,7 @@ public class PlayerController : MonoBehaviour
 			HandleNoVerticalInput(dotProduct);
 		}
 		speed = Mathf.Clamp(speed, -maxSpeed, maxSpeed);
+		/* if (mobile) speed = maxSpeed; */
 		
 		if (IsMovingForwards(dotProduct) || IsMovingBackwards(dotProduct))
 		{ 

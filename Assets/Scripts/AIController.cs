@@ -12,50 +12,53 @@ public class AIController : MonoBehaviour
 
 	private Rigidbody carRigidBody = null;
 	private BoxCollider boxCollider;
-	private structAI ai;	
+	private structAI ai;
 	
+	public CarSpecifications specs;
+	
+	private float maxSpeed = 700;
 	private float speed = 0;
-	private float accelerationTime = 5;
-	private float maxForwardSpeed = 700;
 	private float accelerationRate;
 	
-	[SerializeField] float turnStrength = 0.08f;
-	
-	void Start()
+	void Awake()
 	{
 		carRigidBody = this.GetComponent<Rigidbody>();
 		boxCollider = this.GetComponent<BoxCollider>();
 
 		ai.checkpoints = GameObject.FindWithTag("Checkpoints").transform;
 		ai.checkpointWallIndex = 0;		
-		
-		accelerationRate = maxForwardSpeed / accelerationTime;
+	}
+	
+	void Start()
+	{
+		maxSpeed = specs.maxSpeed;
+		accelerationRate = maxSpeed / specs.accelerationTime;
 	}
 	
 	void Update() 
 	{
 		speed += accelerationRate * Time.deltaTime;
-		speed = Mathf.Clamp(speed, 0, maxForwardSpeed);
+		speed = Mathf.Clamp(speed, 0, maxSpeed);
+		
+		HandleSteering();
+	}
+	
+	private void HandleSteering()
+	{
+		ai.directionSteer = ai.checkpoints.GetChild(ai.checkpointWallIndex).position - this.transform.position;
+		ai.rotationSteer = Quaternion.LookRotation(ai.directionSteer);
+		this.transform.rotation = Quaternion.Slerp(this.transform.rotation, ai.rotationSteer, specs.turnStrength * Time.deltaTime);
 	}
 	
 	private void FixedUpdate()
-	{
-		// turn
-		ai.directionSteer = ai.checkpoints.GetChild(ai.checkpointWallIndex).position - this.transform.position;
-		
-		ai.rotationSteer = Quaternion.LookRotation(ai.directionSteer);
-		this.transform.rotation = Quaternion.Lerp(this.transform.rotation, ai.rotationSteer, turnStrength);
-		
-		float angle = Vector3.Angle(carRigidBody.transform.forward, ai.checkpoints.GetChild(ai.checkpointWallIndex).position); // ne koristi se
-		
+	{		
 		carRigidBody.AddForce(carRigidBody.transform.forward * speed, ForceMode.Acceleration);
-		
 		AdjustSpeedForTerrain();
 	}	
 	
 	private void AdjustSpeedForTerrain() 
 	{
-		maxForwardSpeed = GroundTerrainData.Instance.GetMaxSpeedForTerrainAtPlayersPosition(carRigidBody.transform.position);	
+		maxSpeed = GroundTerrainData.Instance.GetPercentageOfMaxSpeedAllowedAt(carRigidBody.transform.position) * specs.maxSpeed;	
 	}
 	
 	private int CalcNextCheckpoint()

@@ -12,13 +12,9 @@ public class GameHandler : MonoBehaviour
 	private GameObject playerCarInstance;
 	private List<GameObject> aiCarInstances = new List<GameObject>();
 	
-	/* void Awake()
-	{
-		InstantiatePlayerVehicle();
-		InstantiateOponentVehicles(1);
-	} */
+	[SerializeField] CarSpecifications defaultSpecs;
 	
-	void Start() 
+	void Awake() 
 	{
 		InstantiatePlayerVehicle();
 		InstantiateOponentVehicles(1);
@@ -41,7 +37,8 @@ public class GameHandler : MonoBehaviour
 	{
 		int playersCarPrefabIndex = PlayerPrefs.GetInt(PlayerPrefsKeys.SelectedCar);	
 		playerCarInstance = InstantiateCar(carPrefabs[playersCarPrefabIndex], player, new Vector3(0, 0.7684599f, 0));
-		playerCarInstance.AddComponent<PlayerController>().enabled = false;
+		playerCarInstance.AddComponent<PlayerController>().enabled = false;		
+		playerCarInstance.GetComponent<PlayerController>().specs = defaultSpecs;
 		SetCinemachineCameraToFollow(playerCarInstance.transform);
 	}
 	
@@ -59,8 +56,21 @@ public class GameHandler : MonoBehaviour
 				aiCarInstances.Add(car);	
 				spawnedAICarsCount++;				
 				car.AddComponent<AIController>().enabled = false;
-				//SetCinemachineCameraToFollow(car.transform);
+				car.GetComponent<AIController>().specs = defaultSpecs;
 			}
 		}
+	}
+	
+	public void SetCameraToFollow(int follow)
+	{
+		if (follow == -1)
+			SetCinemachineCameraToFollow(playerCarInstance.transform);
+		else
+			SetCinemachineCameraToFollow(aiCarInstances[follow].transform);
+	}
+	
+	public int OponentsCount() 
+	{
+		return aiCarInstances.Count;
 	}
 }

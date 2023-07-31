@@ -14,18 +14,18 @@ public class GroundTerrainData : MonoBehaviour
 		Instance = this;
 	}
 	
-	public float GetMaxSpeedForTerrainAtPlayersPosition(Vector3 playerPosition) 
+	public float GetPercentageOfMaxSpeedAllowedAt(Vector3 playerPosition) 
 	{
 		int textureIndex = GetDominantTextureIndex(playerPosition);
 
 		if (textureIndex == 0) // grass
 		{
-			return 400;
+			return 0.4f;
 		}
-		else // road
+		else
 		{
-			return 700; // max speed
-		}	
+			return 1f; // road
+		}
 	}
 	
 	private int GetDominantTextureIndex(Vector3 playerPosition) 
