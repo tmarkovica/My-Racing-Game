@@ -10,9 +10,6 @@ public class PlayerControllerMobile : MonoBehaviour
 	
 	[SerializeField] Transform leftFrontWheel, rightFrontWheel;
 	
-	[SerializeField] LayerMask terrainTagForGround;
-	public Terrain terrain;
-	
 	private bool mobile = false;
 	
 	private Rigidbody GetRigidBodyComponentFromLastChild() 
@@ -29,10 +26,7 @@ public class PlayerControllerMobile : MonoBehaviour
 	}
 	
 	void Start() 
-	{
-		terrain = GroundTerrainData.Instance.Terrain;
-		terrainTagForGround = GroundTerrainData.Instance.Tag;
-		
+	{		
 		maxSpeed = specs.maxSpeed;
 		accelerationRate = maxSpeed / specs.accelerationTime;
 		

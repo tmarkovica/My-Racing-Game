@@ -539,6 +539,7 @@ MonoBehaviour:
   - {fileID: 100000, guid: f834a2af531103f479acbfc368af8968, type: 3}
   player: {fileID: 1887620300}
   oponents: {fileID: 548514950}
+  defaultSpecs: {fileID: 11400000, guid: ac65d5bba6ebebc448d876ca08536e6d, type: 2}
 --- !u!114 &43403243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10753,6 +10754,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1887620300}
   - component: {fileID: 1887620302}
+  - component: {fileID: 1887620303}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -10793,6 +10795,22 @@ MonoBehaviour:
   speedingDown: {fileID: 8300000, guid: 30ab19edabbfdea499f3db426001e120, type: 3}
   speedingUp_low: {fileID: 8300000, guid: 75fa27e467267c74f91f1f6f4e74ff88, type: 3}
   speedingDown_low: {fileID: 8300000, guid: bb683044c23cd50438d45fe475089c84, type: 3}
+--- !u!114 &1887620303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1887620299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60c07b7477e7a40409e590c1846f7941, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxSpeed: 700
+  accelerationTime: 5
+  breakingStrength: 2.5
+  turnStrength: 0
 --- !u!1 &1901318593
 GameObject:
   m_ObjectHideFlags: 0

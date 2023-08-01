@@ -1,3 +1,5 @@
+#if UNITY_EDITOR
+
 using UnityEngine;
 using UnityEditor;
 
@@ -8,6 +10,8 @@ public class CameraFollowEditor : Editor
 	
 	public override void OnInspectorGUI()
 	{
+		base.OnInspectorGUI();
+
 		GameHandler gh = (GameHandler)target;
 		
 		DrawDefaultInspector();
@@ -28,3 +32,5 @@ public class CameraFollowEditor : Editor
 		
 	}
 }
+
+#endif

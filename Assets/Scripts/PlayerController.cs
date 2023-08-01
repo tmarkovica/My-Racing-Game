@@ -10,14 +10,6 @@ public class PlayerController : MonoBehaviour
 	
 	[SerializeField] Transform leftFrontWheel, rightFrontWheel;
 	
-	[SerializeField] LayerMask terrainTagForGround;
-	public Terrain terrain;
-	
-	private Rigidbody GetRigidBodyComponentFromLastChild() 
-	{
-		return this.transform.GetChild(this.transform.childCount - 1).GetComponent<Rigidbody>();
-	}
-	
 	void Awake()
 	{
 		carRigidBody = this.GetComponent<Rigidbody>();
@@ -27,10 +19,7 @@ public class PlayerController : MonoBehaviour
 	}
 	
 	void Start() 
-	{
-		terrain = GroundTerrainData.Instance.Terrain;
-		terrainTagForGround = GroundTerrainData.Instance.Tag;
-		
+	{		
 		maxSpeed = specs.maxSpeed;
 		accelerationRate = maxSpeed / specs.accelerationTime;
 	}
