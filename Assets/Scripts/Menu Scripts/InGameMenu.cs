@@ -6,10 +6,6 @@ public class InGameMenu : MonoBehaviour
 	[SerializeField] AudioSource SFXPlayer;
 	[SerializeField] GameObject menuPanel;
 	
-	void Start() 
-	{
-	}
-	
 	void Update() 
 	{
 		if (Input.GetKeyDown(KeyCode.Escape)) 

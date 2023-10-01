@@ -8,9 +8,9 @@ public class Timer : MonoBehaviour
 	[SerializeField] Text timerText;
 	[SerializeField] Transform player;
 	[SerializeField] Transform oponents;
-	private int playerCarPrefabNumber;
+	//private int playerCarPrefabNumber;
 	
-	int numberOfOponents = 1;
+	//int numberOfOponents = 1;
 	
 	void Start()
 	{
