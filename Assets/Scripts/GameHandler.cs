@@ -16,8 +16,8 @@ public class GameHandler : MonoBehaviour
 	
 	void Awake() 
 	{
-        UnityEditor.EditorUtility.audioMasterMute = false;
-		InstantiatePlayerVehicle();
+        AudioListener.pause = false;
+        InstantiatePlayerVehicle();
 		InstantiateOponentVehicles(1);
 	}
 	

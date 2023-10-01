@@ -1,11 +1,14 @@
-using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FinishWall : MonoBehaviour
 {
 	[SerializeField] public int totalLaps;
-	
-	public InGameMenu inGameMenu;
+
+	[SerializeField] private GameObject finishDialog;
+    [SerializeField] private Text dialogTextRaceFinished;
+
+    public InGameMenu inGameMenu;
 	
 	private int lapCount_player = -1;
 	private int lapCount_oponent = -1;
@@ -15,8 +18,8 @@ public class FinishWall : MonoBehaviour
 		if (collider.transform.parent.gameObject.name == "Player") 
 		{
 			lapCount_player++;
-			
-			if (lapCount_player == totalLaps) 
+
+            if (lapCount_player == totalLaps) 
 			{
 				FinishRace();
 			}
@@ -29,20 +32,17 @@ public class FinishWall : MonoBehaviour
 	
 	private void FinishRace() 
 	{
-		EditorUtility.audioMasterMute = true;
+		AudioListener.pause = true;
+		Time.timeScale = 0;
 		
 		if (lapCount_player > lapCount_oponent) 
 		{
-			EditorUtility.DisplayDialog("You have WON the race!", "Go To Car Selection", "Ok");
-			inGameMenu.CarSelection();
+			dialogTextRaceFinished.text = "You WON!";
 		}
 		else 
 		{
-			bool result = EditorUtility.DisplayDialog("You have LOST the race!", "Go To Car Selection or restart race", "Ok", "Restart");
-			if (result)
-				inGameMenu.CarSelection();
-			else
-				inGameMenu.RestartGame();
-		}
+            dialogTextRaceFinished.text = "You LOST!";
+        }
+        finishDialog.SetActive(true);
 	}
 }
